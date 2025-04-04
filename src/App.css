@@ -7,8 +7,15 @@ body {
 
 .container {
   display: flex;
-  justify-content: center;
-  align-items: center;
+  justify-content: center; /* 가로 가운데 */
+  align-items: center;  /* 세로 가운데 */
   height: 100vh;
-  flex-direction: column;
+  flex-direction: column; /* 가로 → 세로 */
+}
+
+.weather-box {
+  border: 3px solid white;
+  padding: 30px;
+  border-radius: 30px;
+  background-color: aquamarine;
 }

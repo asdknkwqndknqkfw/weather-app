@@ -1,7 +1,9 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
 import axios from 'axios';
-import Weather from './component/Weather';
+import WeatherBox from './component/WeatherBox';
+import WeatherButton from './component/WeatherButton';
 
 // 1. 앱이 실행되자 마자 도시, 섭씨, 화씨, 날씨 정보를 가져온다.
 // 2. 도시를 선택하면 해당 도시의 날씨 정보를 가져온다.
@@ -68,16 +70,8 @@ function App() {
 
   return (
     <div className='container'>
-      <div style={{ width: '100%', height: '300px', textAlign: 'center', marginBottom: '50px', border: '3px solid white', padding: '50px', borderRadius: '30px' }}>
-        <Weather weatherInfo={weatherInfo}/>
-      </div>
-      <div style={{ width: '100%', height: '50px', textAlign: 'center', display: 'flex', justifyContent: 'center', gap: '10px'}}>
-      <button style={{ background: 'black', color: 'orange', borderColor: 'orange'}}>현재 위치</button>
-        <button style={{ background: 'orange', color: 'black'}}>서울</button>
-        <button style={{ background: 'orange', color: 'black'}}>뉴욕</button>
-        <button style={{ background: 'orange', color: 'black'}}>도쿄</button>
-        <button style={{ background: 'orange', color: 'black'}}>파리</button>
-      </div>
+      <WeatherBox weatherInfo={weatherInfo}/>
+      <WeatherButton />
     </div>
   )
 }
