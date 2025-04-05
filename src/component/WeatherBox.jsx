@@ -1,7 +1,7 @@
 import React from 'react'
 
 const WeatherBox = ({weatherInfo, }) => {
-  console.log('Weather Info:', weatherInfo);
+  // console.log('Weather Info:', weatherInfo);
 
   if (!weatherInfo) {
     return <div>Loading...</div>;

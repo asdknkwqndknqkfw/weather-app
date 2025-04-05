@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import './App.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import ClipLoader from "react-spinners/ClipLoader";
 import axios from 'axios';
 import WeatherBox from './component/WeatherBox';
 import WeatherButton from './component/WeatherButton';
@@ -19,8 +20,13 @@ function App() {
   });
   const [cityName, setCityName] = useState(null);
   const cities = ["Seoul", "New York", "Tokyo", "Canada"];
+  const [buttonVariant, setButtonVariant] = useState(
+    new Array(cities.length + 1).fill("warning")
+  );
   const [weatherInfo, setWeatherInfo] = useState(null);
   const [apiKey, setApiKey] = useState('');
+  
+  const [loading, setLoading] = useState(false);
 
   const getCurrentLocation = () => {
     if (navigator.geolocation) {
@@ -38,6 +44,7 @@ function App() {
   const getWeatherByCurrentLocation = async () => {
     if (axis.latitude !== -1 && axis.longitude !== -1 && apiKey) {
       try {
+        setLoading(true);
         const response = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${axis.latitude}&lon=${axis.longitude}&appid=${apiKey}`)
         console.log('Weather response:', response, response.data.weather[0].main);
         let celsiusFloat = response.data.main.temp - 273.15;
@@ -47,6 +54,7 @@ function App() {
           fahrenheit: (celsiusFloat * 9 / 5 + 32).toFixed(2),
           weather: response.data.weather[0].main
         });
+        setLoading(false);
       } catch (e) {
         console.error('Weather Error', e);
       }
@@ -56,8 +64,9 @@ function App() {
   const getWeatherByCityName = async () => {
     let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
     try {
+      setLoading(true);
       const response = await axios.get(url);
-      console.dir(`getWeatherByCityName response: ${JSON.stringify(response.data)})`);
+      // console.dir(`getWeatherByCityName response: ${JSON.stringify(response.data)})`);
       let celsiusFloat = response.data.main.temp - 273.15;
       setWeatherInfo({
         city: cityName,
@@ -65,6 +74,7 @@ function App() {
         fahrenheit: (celsiusFloat * 9 / 5 + 32).toFixed(2),
         weather: response.data.weather[0].main
       });
+      setLoading(false);
     } catch (e) {
       console.log(`req url: ${url}`);
       console.error('getWeatherByCityName Error', e);
@@ -97,8 +107,21 @@ function App() {
 
   return (
     <div className='container'>
-      <WeatherBox weatherInfo={weatherInfo} />
-      <WeatherButton cities={cities} setCityName={setCityName} />
+      {loading ? (
+        <ClipLoader color="#f88c6b" loading={loading} size={150} />
+      ) : (
+        <>
+          <WeatherBox weatherInfo={weatherInfo} />
+          <WeatherButton 
+            cities={cities} 
+            setCityName={setCityName}
+            buttonVariant={buttonVariant}
+            setButtonVariant={setButtonVariant}
+            getCurrentLocation={getCurrentLocation}
+            getWeatherByCurrentLocation={getWeatherByCurrentLocation}
+          />
+        </>
+      )}
     </div>
   )
 }
