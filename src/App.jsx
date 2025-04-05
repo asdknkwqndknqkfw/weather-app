@@ -17,6 +17,7 @@ function App() {
     latitude: -1,
     longitude: -1
   });
+  const [cityName, setCityName] = useState(null);
   const cities = ["Seoul", "New York", "Tokyo", "Canada"];
   const [weatherInfo, setWeatherInfo] = useState(null);
   const [apiKey, setApiKey] = useState('');
@@ -52,6 +53,24 @@ function App() {
     }
   }
 
+  const getWeatherByCityName = async () => {
+    let url = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${apiKey}`;
+    try {
+      const response = await axios.get(url);
+      console.dir(`getWeatherByCityName response: ${JSON.stringify(response.data)})`);
+      let celsiusFloat = response.data.main.temp - 273.15;
+      setWeatherInfo({
+        city: cityName,
+        celsius: celsiusFloat.toFixed(2),
+        fahrenheit: (celsiusFloat * 9 / 5 + 32).toFixed(2),
+        weather: response.data.weather[0].main
+      });
+    } catch (e) {
+      console.log(`req url: ${url}`);
+      console.error('getWeatherByCityName Error', e);
+    }
+  };
+
   useEffect(() => {
     getCurrentLocation();
     setApiKey(import.meta.env.VITE_APP_WEATHER_KEY);
@@ -66,13 +85,20 @@ function App() {
   }, [axis, apiKey]);
 
   useEffect(() => {
+    console.log(`cityName: `, cityName);
+    if (cityName !== null) {
+      getWeatherByCityName();
+    }
+  }, [cityName]);
+
+  useEffect(() => {
     console.log('weatherInfo:', weatherInfo);
   }, [weatherInfo]);
 
   return (
     <div className='container'>
       <WeatherBox weatherInfo={weatherInfo} />
-      <WeatherButton cities={cities} />
+      <WeatherButton cities={cities} setCityName={setCityName} />
     </div>
   )
 }
