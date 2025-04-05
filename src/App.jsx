@@ -17,6 +17,7 @@ function App() {
     latitude: -1,
     longitude: -1
   });
+  const cities = ["Seoul", "New York", "Tokyo", "Canada"];
   const [weatherInfo, setWeatherInfo] = useState(null);
   const [apiKey, setApiKey] = useState('');
 
@@ -70,8 +71,8 @@ function App() {
 
   return (
     <div className='container'>
-      <WeatherBox weatherInfo={weatherInfo}/>
-      <WeatherButton />
+      <WeatherBox weatherInfo={weatherInfo} />
+      <WeatherButton cities={cities} />
     </div>
   )
 }
